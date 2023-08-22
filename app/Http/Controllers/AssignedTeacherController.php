@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssignedTeacher;
+use App\Models\ClassSubject;
 use Illuminate\Http\Request;
 
 class AssignedTeacherController extends Controller
@@ -28,7 +29,23 @@ class AssignedTeacherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $subjects = $request->subjects;
+        $user_id = $request->user_id;
+        $assignedTeacher = new AssignedTeacher;
+        foreach ($subjects as $key => $value) {
+            $classes = ClassSubject::where('subject_id', $value)->get();
+            foreach ($classes as $key => $class) {
+                $check = AssignedTeacher::where('class_subject_id', $class->id)->count();
+                if ($class->teachers > $check) {
+                    $assignedTeacher->user_id = $user_id;
+                    $assignedTeacher->class_subject_id = $class->id;
+                    $assignedTeacher->save();
+                    return redirect()->route('home')->with('success', 'User Assigned to a class and school');
+                }
+            }
+        }
+
+        return redirect()->route('home')->with('error', 'Please try again next time.');
     }
 
     /**

@@ -54,7 +54,24 @@ class UserController extends Controller
     {
         //
     }
+    public function updateApi(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+        $user->tel = isset($request->tel) ? $request->tel : $user->tel;
+        $user->name = isset($request->name) ? $request->name : $user->name;
+        $user->city = isset($request->city) ? $request->city : $user->city;
+        $user->address = isset($request->address) ? $request->address : $user->address;
+        $user->dob = isset($request->dob) ? $request->dob : $user->dob;
+        $user->state = isset($request->state) ? $request->state : $user->state;
+        $user->lga = isset($request->lga) ? $request->lga : $user->lga;
+        $user->gender = isset($request->gender) ? $request->gender : $user->gender;
+        $user->save();
 
+        return response()->json([
+            'message' => 'Update was Successful',
+            'type' => 'success'
+        ]);
+    }
     /**
      * Remove the specified resource from storage.
      */

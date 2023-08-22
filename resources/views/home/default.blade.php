@@ -36,8 +36,8 @@
                 <div class="col-xl-3 col-sm-6 col-12">
                     <div class="card flex-fill fb sm-box">
                         <div class="social-likes">
-                            <p>Like us on facebook</p>
-                            <h6>50,095</h6>
+                            <p>{{ assigned()->class_subject->school->name }}</p>
+                            <h6>{{ assigned()->class_subject->school_class->name }}</h6>
                         </div>
                         <div class="social-boxs">
                             <img src="assets/img/icons/student-icon-01.svg" alt="Social Icon">

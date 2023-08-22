@@ -48,7 +48,7 @@
                                         <a href="#bank-detail" class="nav-link" data-toggle="tab">
                                             <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Bank Details">
-                                                <i class="fas fa-credit-card"></i>
+                                                <i class="fa-th-list"></i>
                                             </div>
                                         </a>
                                     </li>
@@ -60,6 +60,7 @@
                                             <h5>Enter Your Personal Details</h5>
                                         </div>
                                         <form id="userUpdate">
+                                            <input type="hidden" name="id" value="{{ user()->id }}">
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="mb-3">
@@ -75,7 +76,7 @@
                                                         <label for="basicpill-lastname-input"
                                                             class="form-label">Gender</label>
                                                         <select name="gender" class="form-control" required>
-                                                            <option>-- Select Option --</option>
+                                                            <option value="">-- Select Option --</option>
                                                             <option value="male"
                                                                 @if (user()->gender == 'male') selected @endif>Male
                                                             </option>
@@ -119,23 +120,26 @@
                                             <div class="mb-4">
                                                 <h5>Enter Your Address</h5>
                                             </div>
-                                            <form>
+                                            <form id="userUpdate2">
+                                                <input type="hidden" name="id" value="{{ user()->id }}">
                                                 <div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="basicpill-pancard-input"
                                                                 class="form-label">Address
-                                                                1</label>
+                                                            </label>
                                                             <input type="text" class="form-control"
-                                                                id="basicpill-pancard-input">
+                                                                id="basicpill-pancard-input" name="address"
+                                                                value="{{ user()->address }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
-                                                            <label for="basicpill-vatno-input" class="form-label">Address
-                                                                2</label>
+                                                            <label for="basicpill-vatno-input"
+                                                                class="form-label">L.G.A</label>
                                                             <input type="text" class="form-control"
-                                                                id="basicpill-vatno-input">
+                                                                id="basicpill-vatno-input" name="lga"
+                                                                value="{{ user()->lga }}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -143,98 +147,82 @@
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="basicpill-cstno-input"
-                                                                class="form-label">Landmark</label>
+                                                                class="form-label">City</label>
                                                             <input type="text" class="form-control"
-                                                                id="basicpill-cstno-input">
+                                                                id="basicpill-cstno-input" name="city"
+                                                                value="{{ user()->city }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="basicpill-servicetax-input"
-                                                                class="form-label">Town</label>
+                                                                class="form-label">State</label>
                                                             <input type="text" class="form-control"
-                                                                id="basicpill-servicetax-input">
+                                                                id="basicpill-servicetax-input" name="state"
+                                                                value="{{ user()->state }}">
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                                    <li class="previous"><a href="javascript: void(0);"
+                                                            class="btn btn-primary" onclick="nextTab()"><i
+                                                                class="bx bx-chevron-left me-1"></i> Previous</a></li>
+                                                    <li class="next"><button type="submit"
+                                                            class="btn btn-primary ms-2" onclick="nextTab()">Next <i
+                                                                class="bx bx-chevron-right ms-1"></i></button></li>
+                                                </ul>
                                             </form>
-                                            <ul class="pager wizard twitter-bs-wizard-pager-link">
-                                                <li class="previous"><a href="javascript: void(0);"
-                                                        class="btn btn-primary" onclick="nextTab()"><i
-                                                            class="bx bx-chevron-left me-1"></i> Previous</a></li>
-                                                <li class="next"><a href="javascript: void(0);"
-                                                        class="btn btn-primary ms-2" onclick="nextTab()">Next <i
-                                                            class="bx bx-chevron-right ms-1"></i></a></li>
-                                            </ul>
                                         </div>
                                     </div>
 
                                     <div class="tab-pane" id="bank-detail">
                                         <div>
                                             <div class="mb-4">
-                                                <h5>Payment Details</h5>
+                                                <h5>Choose SUBJECTS you specialize on.</h5>
                                             </div>
-                                            <form>
+                                            <form method="POST" action="{{ route('assigned-teacher.store') }}">
+                                                @csrf
+                                                <input type="hidden" name="user_id" value="{{ user()->id }}">
                                                 <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-namecard-input" class="form-label">Name
-                                                                on Card</label>
-                                                            <input type="text" class="form-control"
-                                                                id="basicpill-namecard-input">
+                                                    @foreach (allSubjects() as $item)
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="subjects[]"
+                                                                    value="{{ $item->id }}"> {{ $item->name }}
+                                                            </label>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Credit Card Type</label>
-                                                            <select class="form-select">
-                                                                <option selected>Select Card Type</option>
-                                                                <option value="AE">American Express</option>
-                                                                <option value="VI">Visa</option>
-                                                                <option value="MC">MasterCard</option>
-                                                                <option value="DI">Discover</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                    @endforeach
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-cardno-input" class="form-label">Credit
-                                                                Card Number</label>
-                                                            <input type="text" class="form-control"
-                                                                id="basicpill-cardno-input">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-card-verification-input"
-                                                                class="form-label">Card Verification Number</label>
-                                                            <input type="text" class="form-control"
-                                                                id="basicpill-card-verification-input">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-expiration-input"
-                                                                class="form-label">Expiration Date</label>
-                                                            <input type="text" class="form-control"
-                                                                id="basicpill-expiration-input">
+                                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                                    <li class="previous"><a href="javascript: void(0);"
+                                                            class="btn btn-primary" onclick="nextTab()"><i
+                                                                class="bx bx-chevron-left me-1"></i> Previous</a></li>
+                                                    <li class="float-end"><a href="javascript: void(0);"
+                                                            class="btn btn-primary ms-2" data-bs-toggle="modal"
+                                                            data-bs-target=".confirmModal">Save
+                                                            Changes</a></li>
+                                                </ul>
+                                                <div class="modal fade confirmModal" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content p-3">
+                                                            <div class="modal-header border-bottom-0">
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="text-center">
+                                                                    <h5 class="mb-3">Confirm Save Changes</h5>
+                                                                    <button type="button" class="btn btn-dark w-md"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary w-md"
+                                                                        data-bs-dismiss="modal" onclick="nextTab()">Save
+                                                                        changes</button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </form>
-                                            <ul class="pager wizard twitter-bs-wizard-pager-link">
-                                                <li class="previous"><a href="javascript: void(0);"
-                                                        class="btn btn-primary" onclick="nextTab()"><i
-                                                            class="bx bx-chevron-left me-1"></i> Previous</a></li>
-                                                <li class="float-end"><a href="javascript: void(0);"
-                                                        class="btn btn-primary ms-2" data-bs-toggle="modal"
-                                                        data-bs-target=".confirmModal">Save
-                                                        Changes</a></li>
-                                            </ul>
                                         </div>
                                     </div>
 
@@ -251,26 +239,6 @@
         </div>
 
 
-    </div>
-
-
-
-    <div class="modal fade confirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-3">
-                <div class="modal-header border-bottom-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center">
-                        <h5 class="mb-3">Confirm Save Changes</h5>
-                        <button type="button" class="btn btn-dark w-md" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary w-md" data-bs-dismiss="modal"
-                            onclick="nextTab()">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 @section('scripts')
