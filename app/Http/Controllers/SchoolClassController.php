@@ -47,7 +47,7 @@ class SchoolClassController extends Controller
         $postArray = $request->all();
         $postArray['code'] = getAcronym($school->name) . '-' . strtoupper($postArray['name']);
         $postArray['name'] = strtoupper($postArray['name']);
-        $check = SchoolClass::where('name', $request->name)->count();
+        $check = SchoolClass::where('name', $request->name)->where('school_id', $id)->count();
         if ($check > 0) {
             return redirect()->back()->with('error', 'Class already exists.');
         } else {
